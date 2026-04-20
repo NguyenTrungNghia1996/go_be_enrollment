@@ -28,6 +28,11 @@ type Config struct {
 	R2BucketName      string
 	R2Endpoint        string
 	R2PublicBaseURL   string
+	SMTPHost          string
+	SMTPPort          string
+	SMTPUser          string
+	SMTPPassword      string
+	SMTPFrom          string
 }
 
 // Load reads config from environment variables and validates required fields.
@@ -48,6 +53,11 @@ func Load() (*Config, error) {
 		R2BucketName:      getEnv("R2_BUCKET_NAME", ""),
 		R2Endpoint:        getEnv("R2_ENDPOINT", ""),
 		R2PublicBaseURL:   getEnv("R2_PUBLIC_BASE_URL", ""),
+		SMTPHost:          getEnv("SMTP_HOST", ""),
+		SMTPPort:          getEnv("SMTP_PORT", "587"),
+		SMTPUser:          getEnv("SMTP_USER", ""),
+		SMTPPassword:      getEnv("SMTP_PASSWORD", ""),
+		SMTPFrom:          getEnv("SMTP_FROM", ""),
 	}
 
 	var err error

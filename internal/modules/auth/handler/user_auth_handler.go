@@ -77,3 +77,30 @@ func (h *UserAuthHandler) GetMe(c *fiber.Ctx) error {
 
 	return httpresponse.Success(c, fiber.StatusOK, "Lấy thông tin thành công", resp)
 }
+
+func (h *UserAuthHandler) Activate(c *fiber.Ctx) error {
+	var req dto.ActivateRequest
+
+	if c.Method() == "GET" {
+		req.Email = c.Query("email")
+		req.Token = c.Query("token")
+		req.OTP = c.Query("otp")
+	} else {
+		if err := c.BodyParser(&req); err != nil {
+			return httpresponse.Error(c, fiber.StatusBadRequest, "INVALID_REQUEST", "Dữ liệu không hợp lệ", nil)
+		}
+	}
+
+	if err := utils.Validate.Struct(req); err != nil {
+		return httpresponse.Error(c, fiber.StatusBadRequest, "VALIDATION_FAILED", "Vui lòng cung cấp email hợp lệ", err.Error())
+	}
+
+	if err := h.service.Activate(c.Context(), &req); err != nil {
+		if errors.Is(err, service.ErrUserNotFound) {
+			return httpresponse.Error(c, fiber.StatusNotFound, "NOT_FOUND", "Tài khoản không tồn tại", nil)
+		}
+		return httpresponse.Error(c, fiber.StatusBadRequest, "ACTIVATION_FAILED", err.Error(), nil)
+	}
+
+	return httpresponse.Success(c, fiber.StatusOK, "Kích hoạt tài khoản thành công", nil)
+}

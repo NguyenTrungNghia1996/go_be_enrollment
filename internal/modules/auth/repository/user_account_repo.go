@@ -12,6 +12,7 @@ type UserAccountRepository interface {
 	FindByUsername(ctx context.Context, username string) (*entity.UserAccount, error)
 	FindByEmail(ctx context.Context, email string) (*entity.UserAccount, error)
 	FindByID(ctx context.Context, id uint) (*entity.UserAccount, error)
+	Update(ctx context.Context, user *entity.UserAccount) error
 }
 
 type userAccountRepo struct {
@@ -51,4 +52,8 @@ func (r *userAccountRepo) FindByID(ctx context.Context, id uint) (*entity.UserAc
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (r *userAccountRepo) Update(ctx context.Context, user *entity.UserAccount) error {
+	return r.db.WithContext(ctx).Save(user).Error
 }

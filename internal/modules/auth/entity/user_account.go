@@ -9,9 +9,12 @@ type UserAccount struct {
 	Email        *string `gorm:"uniqueIndex"`
 	PhoneNumber  *string
 	FullName     string  `gorm:"not null"`
-	IsActive     bool    `gorm:"default:true"`
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	IsActive            bool       `gorm:"default:true"`
+	ActivationToken     *string    `gorm:"type:varchar(255)"`
+	ActivationOTP       *string    `gorm:"type:varchar(6)"`
+	ActivationExpiresAt *time.Time
+	CreatedAt           time.Time
+	UpdatedAt           time.Time
 }
 
 func (UserAccount) TableName() string {
