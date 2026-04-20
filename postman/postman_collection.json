@@ -441,6 +441,70 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "Menu Management",
+            "item": [
+                {
+                    "name": "Get Full Menus Tree",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/menus/tree",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "menus", "tree"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get My Menu Tree",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/menus/my-menu",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "menus", "my-menu"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Menu",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"parent_id\": 0,\n    \"title\": \"Dashboard\",\n    \"menu_key\": \"dashboard\",\n    \"icon\": \"home\",\n    \"url\": \"/dashboard\",\n    \"permission_bit\": 0,\n    \"is_active\": true,\n    \"sort_order\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/menus",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "menus"]
+                        }
+                    }
+                }
+            ]
         }
     ],
     "variable": [

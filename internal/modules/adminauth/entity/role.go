@@ -28,13 +28,16 @@ type RoleGroupPermission struct {
 
 type Menu struct {
 	ID            uint   `gorm:"primaryKey"`
-	ParentID      *uint  `gorm:"index"`
-	Name          string `gorm:"size:100;not null"`
-	Path          string `gorm:"size:255;not null"`
-	Icon          string `gorm:"size:100"`
-	SortOrder     int    `gorm:"default:0"`
+	ParentID      uint   `gorm:"index;default:0"`
+	Title         string `gorm:"size:100;not null"`
 	MenuKey       string `gorm:"size:100;uniqueIndex"`
+	Icon          string `gorm:"size:100"`
+	Url           string `gorm:"size:255;not null"`
 	PermissionBit int    `gorm:"default:0"`
+	IsActive      bool   `gorm:"default:true"`
+	SortOrder     int    `gorm:"default:0"`
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }
 
 // TableNames matching the initialized schema
