@@ -2,14 +2,21 @@ package service
 
 import (
 	"context"
+	"crypto/rand"
 	"errors"
+	"fmt"
+	"math/big"
+	"time"
 
 	"go_be_enrollment/internal/config"
 	"go_be_enrollment/internal/modules/auth/dto"
 	"go_be_enrollment/internal/modules/auth/entity"
 	"go_be_enrollment/internal/modules/auth/repository"
+	"go_be_enrollment/pkg/logger"
 	"go_be_enrollment/pkg/utils"
 
+	"github.com/google/uuid"
+	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -25,6 +32,7 @@ type UserAuthService interface {
 	Register(ctx context.Context, req *dto.RegisterRequest) error
 	Login(ctx context.Context, req *dto.LoginRequest) (*dto.TokenResponse, error)
 	GetMe(ctx context.Context, userID uint) (*dto.UserInfoResponse, error)
+	Activate(ctx context.Context, req *dto.ActivateRequest) error
 }
 
 type userAuthService struct {
@@ -56,11 +64,32 @@ func (s *userAuthService) Register(ctx context.Context, req *dto.RegisterRequest
 		return err
 	}
 
+	var token *string
+	var otp *string
+	var expiresAt *time.Time
+	isActive := true
+
+	if req.Email != "" {
+		isActive = false
+		t := uuid.New().String()
+		token = &t
+
+		n, _ := rand.Int(rand.Reader, big.NewInt(1000000))
+		o := fmt.Sprintf("%06d", n.Int64())
+		otp = &o
+
+		expr := time.Now().Add(24 * time.Hour)
+		expiresAt = &expr
+	}
+
 	user := &entity.UserAccount{
 		Username:     req.Username,
 		PasswordHash: string(hashedPassword),
 		FullName:     req.FullName,
-		IsActive:     true,
+		IsActive:     isActive,
+		ActivationToken:     token,
+		ActivationOTP:       otp,
+		ActivationExpiresAt: expiresAt,
 	}
 
 	if req.Email != "" {
@@ -70,7 +99,70 @@ func (s *userAuthService) Register(ctx context.Context, req *dto.RegisterRequest
 		user.PhoneNumber = &req.PhoneNumber
 	}
 
-	return s.repo.Create(ctx, user)
+	err = s.repo.Create(ctx, user)
+	if err != nil {
+		return err
+	}
+
+	if req.Email != "" {
+		go func(email, fullName, t, o string) {
+			smtpCfg := utils.SMTPConfig{
+				Host:     s.cfg.SMTPHost,
+				Port:     s.cfg.SMTPPort,
+				User:     s.cfg.SMTPUser,
+				Password: s.cfg.SMTPPassword,
+				From:     s.cfg.SMTPFrom,
+			}
+
+			if smtpCfg.Host == "" {
+				return
+			}
+
+			subject := "Xác nhận đăng ký tài khoản và mã Kích hoạt"
+			body := fmt.Sprintf("Chào %s,\n\nBạn đã đăng ký tài khoản thành công.\nMã OTP kích hoạt của bạn là: %s\nHoặc có thể gửi mã Token này: %s lên hệ thống để kích hoạt!\n\nTrân trọng,\nĐội ngũ quản trị", fullName, o, t)
+
+			err := utils.SendEmail(smtpCfg, []string{email}, subject, body)
+			if err != nil {
+				logger.Log.Error("Failed to send confirmation email", zap.Error(err), zap.String("email", email))
+			}
+		}(req.Email, req.FullName, *user.ActivationToken, *user.ActivationOTP)
+	}
+
+	return nil
+}
+
+func (s *userAuthService) Activate(ctx context.Context, req *dto.ActivateRequest) error {
+	if req.OTP == "" && req.Token == "" {
+		return errors.New("vui lòng cung cấp otp hoặc token")
+	}
+
+	user, err := s.repo.FindByEmail(ctx, req.Email)
+	if err != nil {
+		return ErrUserNotFound
+	}
+
+	if user.IsActive {
+		return nil
+	}
+
+	if user.ActivationExpiresAt != nil && time.Now().After(*user.ActivationExpiresAt) {
+		return errors.New("mã kích hoạt đã hết hạn")
+	}
+
+	if req.OTP != "" && (user.ActivationOTP == nil || *user.ActivationOTP != req.OTP) {
+		return errors.New("mã otp không chính xác")
+	}
+
+	if req.Token != "" && (user.ActivationToken == nil || *user.ActivationToken != req.Token) {
+		return errors.New("token không chính xác")
+	}
+
+	user.IsActive = true
+	user.ActivationOTP = nil
+	user.ActivationToken = nil
+	user.ActivationExpiresAt = nil
+
+	return s.repo.Update(ctx, user)
 }
 
 func (s *userAuthService) Login(ctx context.Context, req *dto.LoginRequest) (*dto.TokenResponse, error) {

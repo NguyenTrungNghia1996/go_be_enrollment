@@ -20,6 +20,8 @@ func RegisterUserAuthRoutes(router fiber.Router, db *gorm.DB, cfg *config.Config
 	{
 		authGroup.Post("/register", hdl.Register)
 		authGroup.Post("/login", hdl.Login)
+		authGroup.Post("/activate", hdl.Activate)
+		authGroup.Get("/activate", hdl.Activate)
 
 		// Protected endpoints passing through User JWT Middleware
 		protected := authGroup.Group("")

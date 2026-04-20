@@ -25,3 +25,9 @@ type UserInfoResponse struct {
 	PhoneNumber *string `json:"phone_number"`
 	IsActive    bool    `json:"is_active"`
 }
+
+type ActivateRequest struct {
+	Email string `json:"email" validate:"required,email"`
+	Token string `json:"token,omitempty"`
+	OTP   string `json:"otp,omitempty"`
+}
