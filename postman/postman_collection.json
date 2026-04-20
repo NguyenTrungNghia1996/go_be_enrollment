@@ -769,6 +769,101 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "UserAccount Management (Admin)",
+            "item": [
+                {
+                    "name": "Get List User Accounts",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/user-accounts?page=1&limit=10&keyword=&is_active=true",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "user-accounts"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "limit", "value": "10"},
+                                {"key": "keyword", "value": ""},
+                                {"key": "is_active", "value": "true"}
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get User Account Detail",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/user-accounts/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "user-accounts", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update User Account",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"full_name\": \"Nguyễn Văn A Cập Nhật\",\n    \"email\": \"nva.updated@example.com\",\n    \"phone_number\": \"0987654321\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/user-accounts/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "user-accounts", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Patch User Account Status",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"is_active\": false\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/user-accounts/1/status",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "user-accounts", "1", "status"]
+                        }
+                    }
+                }
+            ]
         }
     ],
     "variable": [

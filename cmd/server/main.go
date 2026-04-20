@@ -21,6 +21,7 @@ import (
 	"go_be_enrollment/internal/modules/admissionperiod"
 	admission_period_entity "go_be_enrollment/internal/modules/admissionperiod/entity"
 	"go_be_enrollment/internal/modules/health"
+	"go_be_enrollment/internal/modules/useraccount"
 	"go_be_enrollment/pkg/logger"
 
 	"github.com/gofiber/fiber/v2"
@@ -88,6 +89,7 @@ func main() {
 	province.RegisterProvinceRoutes(api, db, cfg)
 	wardunit.RegisterWardUnitRoutes(api, db, cfg)
 	admissionperiod.RegisterAdmissionPeriodRoutes(api, db, cfg)
+	useraccount.RegisterUserAccountRoutes(api, db, cfg)
 
 	// Start server
 	addr := fmt.Sprintf(":%s", cfg.AppPort)
