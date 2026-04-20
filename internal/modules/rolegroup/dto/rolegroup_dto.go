@@ -39,3 +39,17 @@ type PaginatedRoleGroupRes struct {
 	Limit      int            `json:"limit"`
 	TotalPages int            `json:"total_pages"`
 }
+
+type RoleGroupPermissionItem struct {
+	PermissionKey   string `json:"permission_key" validate:"required"`
+	PermissionValue int64  `json:"permission_value" validate:"min=0"`
+}
+
+type RoleGroupPermissionReq struct {
+	Permissions []RoleGroupPermissionItem `json:"permissions"`
+}
+
+type RoleGroupPermissionRes struct {
+	PermissionKey   string `json:"permission_key"`
+	PermissionValue int64  `json:"permission_value"`
+}

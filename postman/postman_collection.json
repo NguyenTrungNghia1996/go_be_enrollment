@@ -395,6 +395,50 @@
                             "variable": [{"key": "id", "value": "1"}]
                         }
                     }
+                },
+                {
+                    "name": "Get Role Group Permissions",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/role-groups/:id/permissions",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "role-groups", ":id", "permissions"],
+                            "variable": [{"key": "id", "value": "1"}]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Role Group Permissions",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"permissions\": [\n        {\n            \"permission_key\": \"menu\",\n            \"permission_value\": 1023\n        }\n    ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/role-groups/:id/permissions",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "role-groups", ":id", "permissions"],
+                            "variable": [{"key": "id", "value": "1"}]
+                        }
+                    }
                 }
             ]
         }

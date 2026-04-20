@@ -100,3 +100,36 @@ func (h *RoleGroupHandler) UpdateStatus(c *fiber.Ctx) error {
 
 	return httpresponse.Success(c, fiber.StatusOK, "Cập nhật trạng thái thành công", nil)
 }
+
+func (h *RoleGroupHandler) GetPermissions(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return httpresponse.Error(c, fiber.StatusBadRequest, "INVALID_PARAM", "ID không hợp lệ", nil)
+	}
+
+	res, err := h.svc.GetPermissions(uint(id))
+	if err != nil {
+		return httpresponse.Error(c, fiber.StatusBadRequest, "GET_PERMISSIONS_FAILED", err.Error(), nil)
+	}
+
+	return httpresponse.Success(c, fiber.StatusOK, "Lấy danh sách permissions thành công", res)
+}
+
+func (h *RoleGroupHandler) UpdatePermissions(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return httpresponse.Error(c, fiber.StatusBadRequest, "INVALID_PARAM", "ID không hợp lệ", nil)
+	}
+
+	var req dto.RoleGroupPermissionReq
+	if err := c.BodyParser(&req); err != nil {
+		return httpresponse.Error(c, fiber.StatusBadRequest, "INVALID_BODY", "Dữ liệu không hợp lệ", nil)
+	}
+
+	res, err := h.svc.ReplacePermissions(uint(id), &req)
+	if err != nil {
+		return httpresponse.Error(c, fiber.StatusBadRequest, "UPDATE_PERMISSIONS_FAILED", err.Error(), nil)
+	}
+
+	return httpresponse.Success(c, fiber.StatusOK, "Cập nhật permissions thành công", res)
+}

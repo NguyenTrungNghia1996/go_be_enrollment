@@ -15,6 +15,8 @@ type RoleGroupService interface {
 	Create(req *dto.RoleGroupCreateReq) (*dto.RoleGroupRes, error)
 	Update(id uint, req *dto.RoleGroupUpdateReq) (*dto.RoleGroupRes, error)
 	UpdateStatus(id uint, req *dto.RoleGroupStatusReq) error
+	GetPermissions(roleGroupID uint) ([]dto.RoleGroupPermissionRes, error)
+	ReplacePermissions(roleGroupID uint, req *dto.RoleGroupPermissionReq) ([]dto.RoleGroupPermissionRes, error)
 }
 
 type roleGroupService struct {
@@ -131,4 +133,59 @@ func (s *roleGroupService) UpdateStatus(id uint, req *dto.RoleGroupStatusReq) er
 	}
 
 	return nil
+}
+
+func (s *roleGroupService) GetPermissions(roleGroupID uint) ([]dto.RoleGroupPermissionRes, error) {
+	_, err := s.repo.FindByID(roleGroupID)
+	if err != nil {
+		return nil, errors.New("không tìm thấy nhóm quyền")
+	}
+
+	perms, err := s.repo.GetPermissions(roleGroupID)
+	if err != nil {
+		return nil, errors.New("lỗi lấy danh sách permissions")
+	}
+
+	var res []dto.RoleGroupPermissionRes
+	for _, p := range perms {
+		res = append(res, dto.RoleGroupPermissionRes{
+			PermissionKey:   p.PermissionKey,
+			PermissionValue: p.PermissionValue,
+		})
+	}
+	if res == nil {
+		res = []dto.RoleGroupPermissionRes{}
+	}
+	return res, nil
+}
+
+func (s *roleGroupService) ReplacePermissions(roleGroupID uint, req *dto.RoleGroupPermissionReq) ([]dto.RoleGroupPermissionRes, error) {
+	_, err := s.repo.FindByID(roleGroupID)
+	if err != nil {
+		return nil, errors.New("không tìm thấy nhóm quyền")
+	}
+
+	uniqueMap := make(map[string]int64)
+	for _, item := range req.Permissions {
+		if item.PermissionValue < 0 {
+			return nil, errors.New("permission_value phải lớn hơn hoặc bằng 0")
+		}
+		// Kết hợp (bitwise OR) nếu vô tình upload nhiều lần trên cùng 1 key
+		uniqueMap[item.PermissionKey] |= item.PermissionValue
+	}
+
+	var insertData []entity.RoleGroupPermission
+	for k, v := range uniqueMap {
+		insertData = append(insertData, entity.RoleGroupPermission{
+			RoleGroupID:     roleGroupID,
+			PermissionKey:   k,
+			PermissionValue: v,
+		})
+	}
+
+	if err := s.repo.ReplacePermissions(roleGroupID, insertData); err != nil {
+		return nil, errors.New("lỗi cập nhật permissions")
+	}
+
+	return s.GetPermissions(roleGroupID)
 }

@@ -33,4 +33,7 @@ func RegisterRoleGroupRoutes(router fiber.Router, db *gorm.DB, cfg *config.Confi
 	roleGroup.Post("/", hdl.Create)
 	roleGroup.Put("/:id", hdl.Update)
 	roleGroup.Patch("/:id/status", hdl.UpdateStatus)
+
+	roleGroup.Get("/:id/permissions", hdl.GetPermissions)
+	roleGroup.Put("/:id/permissions", hdl.UpdatePermissions)
 }

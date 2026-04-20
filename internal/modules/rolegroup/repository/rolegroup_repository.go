@@ -16,6 +16,8 @@ type RoleGroupRepository interface {
 	Update(role *entity.RoleGroup) error
 	CheckCodeExists(code string, excludeID uint) bool
 	CheckIsAssigned(id uint) bool
+	GetPermissions(roleGroupID uint) ([]entity.RoleGroupPermission, error)
+	ReplacePermissions(roleGroupID uint, perms []entity.RoleGroupPermission) error
 }
 
 type roleGroupRepository struct {
@@ -85,3 +87,28 @@ func (r *roleGroupRepository) CheckIsAssigned(id uint) bool {
 	r.db.Model(&entity.AdminUserRoleGroup{}).Where("role_group_id = ?", id).Count(&count)
 	return count > 0
 }
+
+func (r *roleGroupRepository) GetPermissions(roleGroupID uint) ([]entity.RoleGroupPermission, error) {
+	var perms []entity.RoleGroupPermission
+	err := r.db.Where("role_group_id = ?", roleGroupID).Find(&perms).Error
+	return perms, err
+}
+
+func (r *roleGroupRepository) ReplacePermissions(roleGroupID uint, perms []entity.RoleGroupPermission) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		// Xóa quyền cũ
+		if err := tx.Where("role_group_id = ?", roleGroupID).Delete(&entity.RoleGroupPermission{}).Error; err != nil {
+			return err
+		}
+
+		// Thêm mới
+		if len(perms) > 0 {
+			if err := tx.Create(&perms).Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+}
+

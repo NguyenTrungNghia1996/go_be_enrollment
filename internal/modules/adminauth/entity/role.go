@@ -22,6 +22,8 @@ type RoleGroupPermission struct {
 	RoleGroupID     uint   `gorm:"primaryKey"`
 	PermissionKey   string `gorm:"primaryKey;size:100"`
 	PermissionValue int64  `gorm:"not null;default:0"`
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
 }
 
 type Menu struct {
