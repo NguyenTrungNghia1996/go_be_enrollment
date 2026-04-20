@@ -1567,6 +1567,71 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "AdmissionPeriodSubject Management",
+            "item": [
+                {
+                    "name": "Get Admission Period Subjects",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/admission-periods/1/subjects",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "admin",
+                                "admission-periods",
+                                "1",
+                                "subjects"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Admission Period Subjects",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"subjects\": [\n        {\n            \"subject_id\": 1,\n            \"weight\": 2.0,\n            \"is_required\": true\n        },\n        {\n            \"subject_id\": 2,\n            \"weight\": 1.0,\n            \"is_required\": false\n        }\n    ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/admission-periods/1/subjects",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "admin",
+                                "admission-periods",
+                                "1",
+                                "subjects"
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     ],
     "variable": [

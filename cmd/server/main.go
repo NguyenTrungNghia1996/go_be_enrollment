@@ -30,6 +30,8 @@ import (
 	"go_be_enrollment/internal/modules/useraccount"
 	"go_be_enrollment/internal/modules/subject"
 	subject_entity "go_be_enrollment/internal/modules/subject/entity"
+	"go_be_enrollment/internal/modules/admissionperiodsubject"
+	admission_period_subject_entity "go_be_enrollment/internal/modules/admissionperiodsubject/entity"
 	"go_be_enrollment/pkg/logger"
 
 	"github.com/gofiber/fiber/v2"
@@ -73,6 +75,7 @@ func main() {
 		&academic_record_entity.AcademicRecord{},
 		&application_document_entity.ApplicationDocument{},
 		&subject_entity.Subject{},
+		&admission_period_subject_entity.AdmissionPeriodSubject{},
 	); err != nil {
 		logger.Log.Fatal("AutoMigrate failed for Admin modules", zap.Error(err))
 	}
@@ -106,6 +109,7 @@ func main() {
 	academicrecord.RegisterAcademicRecordRoutes(api, db, cfg)
 	applicationdocument.RegisterApplicationDocumentRoutes(api, db, cfg)
 	subject.RegisterSubjectRoutes(api, db, cfg)
+	admissionperiodsubject.RegisterAdmissionPeriodSubjectRoutes(api, db, cfg)
 
 	// Start server
 	addr := fmt.Sprintf(":%s", cfg.AppPort)
