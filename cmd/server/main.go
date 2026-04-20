@@ -7,6 +7,7 @@ import (
 	"go_be_enrollment/internal/config"
 	"go_be_enrollment/internal/database"
 	"go_be_enrollment/internal/middleware"
+	"go_be_enrollment/internal/modules/auth"
 	"go_be_enrollment/internal/modules/health"
 	"go_be_enrollment/pkg/logger"
 
@@ -48,6 +49,7 @@ func main() {
 	// Register Routes
 	api := app.Group("/api/v1")
 	health.RegisterRoutes(api)
+	auth.RegisterUserAuthRoutes(api, db, cfg)
 
 	// Start server
 	addr := fmt.Sprintf(":%s", cfg.AppPort)

@@ -25,9 +25,12 @@ CREATE TABLE IF NOT EXISTS ward_units (
 -- UserAccount
 CREATE TABLE IF NOT EXISTS user_accounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(100) NOT NULL UNIQUE,
+    username VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    status ENUM('active', 'inactive', 'banned') DEFAULT 'active',
+    email VARCHAR(100) UNIQUE,
+    phone_number VARCHAR(20),
+    full_name VARCHAR(100) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
