@@ -276,6 +276,83 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "Role Group Management",
+            "item": [
+                {
+                    "name": "Get List Role Groups",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/role-groups?page=1&limit=10",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "role-groups"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "limit", "value": "10"}
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Role Group",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"code\": \"MANAGER\",\n    \"name\": \"Manager\",\n    \"description\": \"System Manager\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/role-groups",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "role-groups"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Role Group Status",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"is_active\": false\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/role-groups/:id/status",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "role-groups", ":id", "status"],
+                            "variable": [{"key": "id", "value": "1"}]
+                        }
+                    }
+                }
+            ]
         }
     ],
     "variable": [
