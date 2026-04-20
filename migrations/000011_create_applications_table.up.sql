@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS applications (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_account_id BIGINT UNSIGNED NOT NULL,
+    admission_period_id BIGINT UNSIGNED NOT NULL,
+    candidate_full_name VARCHAR(255) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    gender ENUM('Male', 'Female', 'Other') NOT NULL,
+    place_of_birth VARCHAR(255),
+    ethnicity VARCHAR(100),
+    national_id VARCHAR(50) NOT NULL UNIQUE,
+    province_id BIGINT UNSIGNED,
+    ward_unit_id BIGINT UNSIGNED,
+    address_line VARCHAR(255),
+    contact_full_name VARCHAR(255) NOT NULL,
+    contact_phone_number VARCHAR(20) NOT NULL,
+    application_status ENUM('Draft', 'Submitted', 'Approved', 'Rejected') DEFAULT 'Draft',
+    is_paid BOOLEAN DEFAULT FALSE,
+    submitted_at DATETIME(3) NULL,
+    candidate_number VARCHAR(50) NULL,
+    created_at DATETIME(3) NULL,
+    updated_at DATETIME(3) NULL,
+    
+    UNIQUE INDEX idx_admission_candidate (admission_period_id, candidate_number),
+    FOREIGN KEY (user_account_id) REFERENCES user_accounts(id) ON DELETE RESTRICT,
+    FOREIGN KEY (admission_period_id) REFERENCES admission_periods(id) ON DELETE RESTRICT,
+    FOREIGN KEY (province_id) REFERENCES provinces(id) ON DELETE SET NULL,
+    FOREIGN KEY (ward_unit_id) REFERENCES ward_units(id) ON DELETE SET NULL
+);

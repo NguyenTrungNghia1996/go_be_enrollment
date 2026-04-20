@@ -864,6 +864,144 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "Application Management (User)",
+            "item": [
+                {
+                    "name": "Get User Applications",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{user_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/me/applications?page=1&limit=10",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "me", "applications"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "limit", "value": "10"}
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get User Application Detail",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{user_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/me/applications/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "me", "applications", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Application",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{user_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"admission_period_id\": 1,\n    \"candidate_full_name\": \"Nguyễn Học Sinh\",\n    \"date_of_birth\": \"2011-04-20\",\n    \"gender\": \"Male\",\n    \"place_of_birth\": \"Hà Nội\",\n    \"ethnicity\": \"Kinh\",\n    \"national_id\": \"001200123456\",\n    \"province_id\": 1,\n    \"ward_unit_id\": 1,\n    \"address_line\": \"Số 10 Đường ABC\",\n    \"contact_full_name\": \"Nguyễn Phụ Huynh\",\n    \"contact_phone_number\": \"0988777666\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/me/applications",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "me", "applications"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Application",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{user_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"admission_period_id\": 1,\n    \"candidate_full_name\": \"Nguyễn Học Sinh Cập Nhật\",\n    \"date_of_birth\": \"2011-04-20\",\n    \"gender\": \"Male\",\n    \"place_of_birth\": \"Hà Nội\",\n    \"ethnicity\": \"Kinh\",\n    \"national_id\": \"001200123456\",\n    \"province_id\": 1,\n    \"ward_unit_id\": 1,\n    \"address_line\": \"Số 12 Đường Mới\",\n    \"contact_full_name\": \"Nguyễn Phụ Huynh\",\n    \"contact_phone_number\": \"0988777666\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/me/applications/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "me", "applications", "1"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Application Management (Admin)",
+            "item": [
+                {
+                    "name": "Get Application List (Admin)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/applications?page=1&limit=10&keyword=&application_status=Draft",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "applications"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "limit", "value": "10"},
+                                {"key": "keyword", "value": ""},
+                                {"key": "application_status", "value": "Draft"}
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Application Detail (Admin)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/applications/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "applications", "1"]
+                        }
+                    }
+                }
+            ]
         }
     ],
     "variable": [
