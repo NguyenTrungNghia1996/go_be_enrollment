@@ -505,6 +505,70 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "Province Management",
+            "item": [
+                {
+                    "name": "Get Public Provinces",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/public/provinces",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "public", "provinces"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get List Provinces (Admin)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/provinces?page=1&limit=10&keyword=",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "provinces"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "limit", "value": "10"},
+                                {"key": "keyword", "value": ""}
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Province",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"code\": \"HN\",\n    \"name\": \"Hà Nội\",\n    \"is_active\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/provinces",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "provinces"]
+                        }
+                    }
+                }
+            ]
         }
     ],
     "variable": [
