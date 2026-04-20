@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"go_be_enrollment/internal/config"
 	"go_be_enrollment/internal/database"
@@ -15,7 +16,10 @@ import (
 
 func main() {
 	// Load configuration
-	cfg := config.LoadConfig()
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatalf("Failed to start application due to missing or invalid config: %v", err)
+	}
 
 	// Initialize logger
 	logger.InitLogger(cfg.AppEnv)
@@ -31,7 +35,7 @@ func main() {
 
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
-		AppName: "Enrollment System",
+		AppName: cfg.AppName,
 	})
 
 	// Apply Middlewares
