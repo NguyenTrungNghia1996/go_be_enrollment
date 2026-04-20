@@ -9,7 +9,7 @@ import (
 	"go_be_enrollment/internal/modules/health"
 	"go_be_enrollment/pkg/logger"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 )
 
@@ -21,13 +21,6 @@ func main() {
 	logger.InitLogger(cfg.AppEnv)
 	defer logger.Sync()
 
-	// Set Gin mode
-	if cfg.AppEnv == "production" {
-		gin.SetMode(gin.ReleaseMode)
-	} else {
-		gin.SetMode(gin.DebugMode)
-	}
-
 	// Initialize database
 	db, err := database.ConnectMySQL(cfg)
 	if err != nil {
@@ -36,24 +29,24 @@ func main() {
 	// Prevent "declared and not used" error for now. `db` will be injected into repositories.
 	_ = db
 
-	// Create Gin router without default middlewares
-	r := gin.New()
+	// Create Fiber app
+	app := fiber.New(fiber.Config{
+		AppName: "Enrollment System",
+	})
 
 	// Apply Middlewares
-	r.Use(middleware.RequestLogger())
-	r.Use(middleware.Recovery())
-	r.Use(middleware.CORS())
+	app.Use(middleware.RequestLogger())
+	app.Use(middleware.Recovery())
+	app.Use(middleware.CORS())
 
 	// Register Routes
-	api := r.Group("/api/v1")
-	{
-		health.RegisterRoutes(api)
-	}
+	api := app.Group("/api/v1")
+	health.RegisterRoutes(api)
 
 	// Start server
 	addr := fmt.Sprintf(":%s", cfg.AppPort)
 	logger.Log.Info(fmt.Sprintf("Server is starting on port %s...", cfg.AppPort))
-	if err := r.Run(addr); err != nil {
+	if err := app.Listen(addr); err != nil {
 		logger.Log.Fatal("Failed to start server", zap.Error(err))
 	}
 }

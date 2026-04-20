@@ -1,23 +1,28 @@
 package middleware
 
 import (
-	"net/http"
+	"fmt"
+	"runtime/debug"
 
 	"go_be_enrollment/internal/common"
 	"go_be_enrollment/pkg/logger"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 )
 
-func Recovery() gin.HandlerFunc {
-	return gin.CustomRecovery(func(c *gin.Context, recovered interface{}) {
-		if err, ok := recovered.(string); ok {
-			logger.Log.Error("Panic recovered", zap.String("error", err))
-		} else {
-			logger.Log.Error("Panic recovered", zap.Any("error", recovered))
-		}
-		common.ErrorResponse(c, http.StatusInternalServerError, "Internal Server Error", nil)
-		c.Abort()
-	})
+func Recovery() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		defer func() {
+			if r := recover(); r != nil {
+				err := fmt.Errorf("%v", r)
+				logger.Log.Error("Panic recovered",
+					zap.Error(err),
+					zap.String("stack", string(debug.Stack())),
+				)
+				_ = common.ErrorResponse(c, fiber.StatusInternalServerError, "Internal Server Error", nil)
+			}
+		}()
+		return c.Next()
+	}
 }

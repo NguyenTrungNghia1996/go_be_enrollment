@@ -4,7 +4,7 @@ This is the skeleton for the backend of the school enrollment system.
 
 ## Tech Stack
 - **Go** 1.21+
-- **Gin** (Web Framework)
+- **GoFiber** (Web Framework)
 - **GORM** (ORM)
 - **MySQL** (Database)
 - **golang-migrate** (Database Migrations)

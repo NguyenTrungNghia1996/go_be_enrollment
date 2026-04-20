@@ -1,8 +1,6 @@
 package common
 
-import (
-	"github.com/gin-gonic/gin"
-)
+import "github.com/gofiber/fiber/v2"
 
 type Response struct {
 	Success bool        `json:"success"`
@@ -11,16 +9,16 @@ type Response struct {
 	Error   interface{} `json:"error,omitempty"`
 }
 
-func SuccessResponse(c *gin.Context, statusCode int, message string, data interface{}) {
-	c.JSON(statusCode, Response{
+func SuccessResponse(c *fiber.Ctx, statusCode int, message string, data interface{}) error {
+	return c.Status(statusCode).JSON(Response{
 		Success: true,
 		Message: message,
 		Data:    data,
 	})
 }
 
-func ErrorResponse(c *gin.Context, statusCode int, message string, err interface{}) {
-	c.JSON(statusCode, Response{
+func ErrorResponse(c *fiber.Ctx, statusCode int, message string, err interface{}) error {
+	return c.Status(statusCode).JSON(Response{
 		Success: false,
 		Message: message,
 		Error:   err,

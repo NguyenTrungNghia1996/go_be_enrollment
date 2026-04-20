@@ -1,15 +1,13 @@
 package health
 
 import (
-	"net/http"
-
 	"go_be_enrollment/internal/common"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
-func Check(c *gin.Context) {
-	common.SuccessResponse(c, http.StatusOK, "Service is up and running", gin.H{
+func Check(c *fiber.Ctx) error {
+	return common.SuccessResponse(c, fiber.StatusOK, "Service is up and running", fiber.Map{
 		"status": "OK",
 	})
 }
