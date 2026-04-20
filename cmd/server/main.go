@@ -24,6 +24,8 @@ import (
 	application_entity "go_be_enrollment/internal/modules/application/entity"
 	"go_be_enrollment/internal/modules/academicrecord"
 	academic_record_entity "go_be_enrollment/internal/modules/academicrecord/entity"
+	"go_be_enrollment/internal/modules/applicationdocument"
+	application_document_entity "go_be_enrollment/internal/modules/applicationdocument/entity"
 	"go_be_enrollment/internal/modules/health"
 	"go_be_enrollment/internal/modules/useraccount"
 	"go_be_enrollment/pkg/logger"
@@ -67,6 +69,7 @@ func main() {
 		&admission_period_entity.AdmissionPeriod{},
 		&application_entity.Application{},
 		&academic_record_entity.AcademicRecord{},
+		&application_document_entity.ApplicationDocument{},
 	); err != nil {
 		logger.Log.Fatal("AutoMigrate failed for Admin modules", zap.Error(err))
 	}
@@ -98,6 +101,7 @@ func main() {
 	useraccount.RegisterUserAccountRoutes(api, db, cfg)
 	application.RegisterApplicationRoutes(api, db, cfg)
 	academicrecord.RegisterAcademicRecordRoutes(api, db, cfg)
+	applicationdocument.RegisterApplicationDocumentRoutes(api, db, cfg)
 
 	// Start server
 	addr := fmt.Sprintf(":%s", cfg.AppPort)
