@@ -637,6 +637,138 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "AdmissionPeriod Management",
+            "item": [
+                {
+                    "name": "Get Public Open Admission Periods",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/public/admission-periods/open",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "public", "admission-periods", "open"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get List Admission Periods (Admin)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/admission-periods?page=1&limit=10&keyword=&school_year=2026-2027",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "admission-periods"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "limit", "value": "10"},
+                                {"key": "keyword", "value": ""},
+                                {"key": "school_year", "value": "2026-2027"}
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Admission Period Detail",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/admission-periods/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "admission-periods", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Admission Period",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Kỳ Tuyển Sinh Đầu Vào 2026\",\n    \"school_year\": \"2026-2027\",\n    \"start_date\": \"2026-06-01\",\n    \"end_date\": \"2026-08-30\",\n    \"exam_fee\": 150000,\n    \"is_open\": true,\n    \"notes\": \"Dành cho khối lớp 10\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/admission-periods",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "admission-periods"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Admission Period",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Kỳ Tuyển Sinh Mùa Thu 2026\",\n    \"school_year\": \"2026-2027\",\n    \"start_date\": \"2026-06-01\",\n    \"end_date\": \"2026-08-31\",\n    \"exam_fee\": 200000,\n    \"is_open\": true,\n    \"notes\": \"Cập nhật học phí\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/admission-periods/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "admission-periods", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Patch Admission Period Open Status",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{admin_access_token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"is_open\": false\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/admin/admission-periods/1/open-status",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "admin", "admission-periods", "1", "open-status"]
+                        }
+                    }
+                }
+            ]
         }
     ],
     "variable": [
