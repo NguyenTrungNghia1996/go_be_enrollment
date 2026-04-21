@@ -1,58 +1,32 @@
-version: '3.8'
-
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: trungnghia1996/school_enrollment_be:latest
     container_name: go_be_enrollment_app
     ports:
       - "8080:8080"
     environment:
-      - APP_ENV=production
-      - APP_PORT=8080
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=enrollment_db
-      - JWT_SECRET=supersecretjwtkeyforcourse2026
-      # AWS variables for any S3 integrations
-      - AWS_REGION=ap-southeast-1
-      - AWS_ACCESS_KEY_ID=minioadmin
-      - AWS_SECRET_ACCESS_KEY=minioadmin
-      - AWS_S3_BUCKET=enrollment-bucket
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - enrollment_network
+      APP_NAME: "Enrollment System"
+      APP_ENV: production
+      APP_PORT: "8080"
+      APP_TIMEZONE: Asia/Ho_Chi_Minh
+      MYSQL_HOST: 103.47.224.231
+      MYSQL_PORT: "3306"
+      MYSQL_DB: my_database
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password123
+      MYSQL_PARAMS: "charset=utf8mb4&parseTime=True&loc=Local"
+      JWT_SECRET: super_secret_for_jwt_change_in_production
+      JWT_EXPIRES_IN: 24h
+      CORS_ALLOW_ORIGINS: "*"
+      R2_ACCOUNT_ID: ""
+      R2_ACCESS_KEY_ID: ""
+      R2_SECRET_ACCESS_KEY: ""
+      R2_BUCKET_NAME: ""
+      R2_ENDPOINT: ""
+      R2_PUBLIC_BASE_URL: ""
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: "587"
+      SMTP_USER: your_email@gmail.com
+      SMTP_PASSWORD: your_app_password
+      SMTP_FROM: "Enrollment System <your_email@gmail.com>"
     restart: unless-stopped
-
-  db:
-    image: mysql:8.0
-    container_name: go_be_enrollment_db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: enrollment_db
-    ports:
-      - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-    # Set proper character encoding for MySQL 8
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - enrollment_network
-    restart: unless-stopped
-
-volumes:
-  db_data:
-
-networks:
-  enrollment_network:
-    driver: bridge

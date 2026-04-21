@@ -45,6 +45,6 @@ Thumbs.db
 tmp/
 temp/
 uploads/
-
+.codex
 # Dependency directories (remove the comment below if vendor directory should be ignored)
 # vendor/
